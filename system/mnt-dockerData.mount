@@ -1,0 +1,18 @@
+# Add this file to /etc/systemd/system/
+# sudo systemctl enable mnt-dockerData.mount
+# sudo systemctl start mnt-dockerData.moun
+# sudo systemctl status mnt-dockerData.moun (troubleshooting)
+# sudo systemctl daemon-reload
+# systemctl list-units | grep service
+
+[Unit]
+Description=MountVolume
+
+[Mount]
+What=/dev/sdb1
+Where=/mnt/dockerData
+Type=ext4
+
+[Install]
+WantedBy=multi-user.target
+
