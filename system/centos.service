@@ -8,16 +8,17 @@
 Description=docker-centos7
 After=docker.service
 Requires=docker.service
+Want=mnt-dockerData.mount
 After=mnt-dockerData.mount
-Requires=mnt-dockerData.mount
 
 [Service]
 TimeoutStartSec=0
-ExecStartPre=-/usr/bin/docker kill centos7
-ExecStartPre=-/usr/bin/docker rm centos7
+ExecStartPre=/usr/bin/docker kill centos7
+ExecStartPre=/usr/bin/docker rm centos7
 ExecStartPre=/usr/bin/docker pull edwardkan/docker-centos7
-ExecStartPre=/usr/bin/systemctl start docker.socket
-ExecStart=/usr/bin/docker run -h centos7 -p 192.168.11.70:1022:22 --name centos7 -v /mnt/dockerData/centos:/mnt/remoteStorage edwardkan/docker-centos7
+ExecStartPre=/usr/bin/systemctl restart docker.socket
+#ExecStart=/usr/bin/docker run -h centos7 -p 192.168.11.70:1022:22 --name centos7 -v /mnt/dockerData/centos:/mnt/remoteStorage edwardkan/docker-centos7
+ExecStart=/usr/bin/docker run -h centos7 -p 192.168.11.70:1022:22 --name centos7 edwardkan/docker-centos7
 ExecStop=/usr/bin/docker stop centos7
 
 [Install]
