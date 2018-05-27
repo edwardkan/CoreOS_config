@@ -1,0 +1,24 @@
+# https://coreos.com/os/docs/latest/getting-started-with-systemd.html
+# Add this file to /etc/systemd/system/
+# sudo systemctl enable /etc/systemd/system/fileserver.service
+# sudo systemctl start fileserver.service
+# sudo systemctl daemon-reload
+# systemctl list-units | grep service
+[Unit]
+Description=docker-centos7
+After=docker.service
+Requires=docker.service
+After=mnt-dockerData.mount
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker kill fileserver
+ExecStartPre=-/usr/bin/docker rm fileserver
+ExecStartPre=/usr/bin/docker pull edwardkan/fileserver
+ExecStart=/usr/bin/docker run -h fileserver --name fileserver -p 1023:22 -p 445:445 -p 139:139 -p 135:135 -p 137:137/udp -p 138:138/udp -v /mnt/dockerData/fileserver:/mnt/coreStorage edwardkan/fileserver
+ExecStop=/usr/bin/docker stop fileserver
+
+[Install]
+WantedBy=multi-user.target
+
+
